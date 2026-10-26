@@ -22,47 +22,50 @@ const SERIES = [
 ];
 
 const CHARACTERS = [
-  { id: "honoka",   name: "高坂 穂乃果",   kana: "こうさか ほのか",       romaji: "KOSAKA HONOKA",       series: "mus" },
-  { id: "rin",      name: "星空 凛",       kana: "ほしぞら りん",         romaji: "HOSHIZORA RIN",       series: "mus" },
-  { id: "maki",     name: "西木野 真姫",   kana: "にしきの まき",         romaji: "NISHIKINO MAKI",      series: "mus" },
-  { id: "hanayo",   name: "小泉 花陽",     kana: "こいずみ はなよ",       romaji: "KOIZUMI HANAYO",      series: "mus" },
-  { id: "nico",     name: "矢澤 にこ",     kana: "やざわ にこ",           romaji: "YAZAWA NICO",         series: "mus" },
+  { id: "honoka",   name: "高坂 穂乃果",   kana: "こうさか ほのか",       romaji: "KOSAKA HONOKA",       series: "mus", color: "#f38500" },
+  { id: "rin",      name: "星空 凛",       kana: "ほしぞら りん",         romaji: "HOSHIZORA RIN",       series: "mus", color: "#fff832" },
+  { id: "maki",     name: "西木野 真姫",   kana: "にしきの まき",         romaji: "NISHIKINO MAKI",      series: "mus", color: "#ff503e" },
+  { id: "hanayo",   name: "小泉 花陽",     kana: "こいずみ はなよ",       romaji: "KOIZUMI HANAYO",      series: "mus", color: "#6ae673" },
+  { id: "nico",     name: "矢澤 にこ",     kana: "やざわ にこ",           romaji: "YAZAWA NICO",         series: "mus", color: "#ff4f91" },
 
-  { id: "chika",    name: "高海 千歌",     kana: "たかみ ちか",           romaji: "TAKAMI CHIKA",        series: "aqours" },
-  { id: "riko",     name: "桜内 梨子",     kana: "さくらうち りこ",       romaji: "SAKURAUCHI RIKO",     series: "aqours" },
-  { id: "you",      name: "渡辺 曜",       kana: "わたなべ よう",         romaji: "WATANABE YOU",        series: "aqours" },
-  { id: "hanamaru", name: "国木田 花丸",   kana: "くにきだ はなまる",     romaji: "KUNIKIDA HANAMARU",   series: "aqours" },
+  { id: "chika",    name: "高海 千歌",     kana: "たかみ ちか",           romaji: "TAKAMI CHIKA",        series: "aqours", color: "#ff9547" },
+  { id: "riko",     name: "桜内 梨子",     kana: "さくらうち りこ",       romaji: "SAKURAUCHI RIKO",     series: "aqours", color: "#ff9eac" },
+  { id: "you",      name: "渡辺 曜",       kana: "わたなべ よう",         romaji: "WATANABE YOU",        series: "aqours", color: "#66c0ff" },
+  { id: "hanamaru", name: "国木田 花丸",   kana: "くにきだ はなまる",     romaji: "KUNIKIDA HANAMARU",   series: "aqours", color: "#ffd010" },
 
-  { id: "ayumu",    name: "上原 歩夢",     kana: "うえはら あゆむ",       romaji: "UEHARA AYUMU",        series: "niji" },
-  { id: "kasumi",   name: "中須 かすみ",   kana: "なかす かすみ",         romaji: "NAKASU KASUMI",       series: "niji" },
-  { id: "shizuku",  name: "桜坂 しずく",   kana: "おうさか しずく",       romaji: "OSAKA SHIZUKU",       series: "niji" },
-  { id: "kanata",   name: "近江 彼方",     kana: "このえ かなた",         romaji: "KONOE KANATA",        series: "niji" },
-  { id: "rina",     name: "天王寺 璃奈",   kana: "てんのうじ りな",       romaji: "TENNOJI RINA",        series: "niji" },
-  { id: "shioriko", name: "三船 栞子",     kana: "みふね しおりこ",       romaji: "MIFUNE SHIORIKO",     series: "niji" },
+  { id: "ayumu",    name: "上原 歩夢",     kana: "うえはら あゆむ",       romaji: "UEHARA AYUMU",        series: "niji", color: "#ed7d95" },
+  { id: "kasumi",   name: "中須 かすみ",   kana: "なかす かすみ",         romaji: "NAKASU KASUMI",       series: "niji", color: "#e7d600" },
+  { id: "shizuku",  name: "桜坂 しずく",   kana: "おうさか しずく",       romaji: "OSAKA SHIZUKU",       series: "niji", color: "#01b7ed" },
+  { id: "kanata",   name: "近江 彼方",     kana: "このえ かなた",         romaji: "KONOE KANATA",        series: "niji", color: "#a664a0" },
+  { id: "rina",     name: "天王寺 璃奈",   kana: "てんのうじ りな",       romaji: "TENNOJI RINA",        series: "niji", color: "#9ca5b9" },
+  { id: "shioriko", name: "三船 栞子",     kana: "みふね しおりこ",       romaji: "MIFUNE SHIORIKO",     series: "niji", color: "#37b484" },
 
-  { id: "kanon",    name: "澁谷 かのん",   kana: "しぶや かのん",         romaji: "SHIBUYA KANON",       series: "liella" },
-  { id: "keke",     name: "唐 可可",       kana: "たん くぅくぅ",         romaji: "TANG KEKE",           series: "liella" },
-  { id: "sumire",   name: "平安名 すみれ", kana: "へあんな すみれ",       romaji: "HEANNA SUMIRE",       series: "liella" },
-  { id: "shiki",    name: "若菜 四季",     kana: "わかな しき",           romaji: "WAKANA SHIKI",        series: "liella" },
-  { id: "natsumi",  name: "鬼塚 夏美",     kana: "おにつか なつみ",       romaji: "ONITSUKA NATSUMI",    series: "liella" },
-  { id: "margarete",name: "ウィーン・マルガレーテ", kana: "うぃーん まるがれーて", romaji: "WIEN MARGARETE", series: "liella" },
+  { id: "kanon",    name: "澁谷 かのん",   kana: "しぶや かのん",         romaji: "SHIBUYA KANON",       series: "liella", color: "#ff7f27" },
+  { id: "keke",     name: "唐 可可",       kana: "たん くぅくぅ",         romaji: "TANG KEKE",           series: "liella", color: "#a0fff9" },
+  { id: "sumire",   name: "平安名 すみれ", kana: "へあんな すみれ",       romaji: "HEANNA SUMIRE",       series: "liella", color: "#74f466" },
+  { id: "shiki",    name: "若菜 四季",     kana: "わかな しき",           romaji: "WAKANA SHIKI",        series: "liella", color: "#b2ffdd" },
+  { id: "natsumi",  name: "鬼塚 夏美",     kana: "おにつか なつみ",       romaji: "ONITSUKA NATSUMI",    series: "liella", color: "#ff51c4" },
+  { id: "margarete",name: "ウィーン・マルガレーテ", kana: "うぃーん まるがれーて", romaji: "WIEN MARGARETE", series: "liella", color: "#e49dfd" },
 
-  { id: "kaho",     name: "日野下 花帆",   kana: "ひのした かほ",         romaji: "HINOSHITA KAHO",      series: "hasu" },
-  { id: "sayaka",   name: "村野 さやか",   kana: "むらの さやか",         romaji: "MURANO SAYAKA",       series: "hasu" },
-  { id: "rurino",   name: "大沢 瑠璃乃",   kana: "おおさわ るりの",       romaji: "OSAWA RURINO",        series: "hasu" },
-  { id: "ginko",    name: "百生 吟子",     kana: "ももせ ぎんこ",         romaji: "MOMOSE GINKO",        series: "hasu" },
-  { id: "izumi",    name: "桂城 泉",       kana: "かつらぎ いずみ",       romaji: "KATSURAGI IZUMI",     series: "hasu" },
-  { id: "ceras",    name: "セラス 柳田 リリエンフェルト", kana: "せらす やなぎだ りりえんふぇると", romaji: "CERAS Y. LILIENFELD", series: "hasu" },
+  { id: "kaho",     name: "日野下 花帆",   kana: "ひのした かほ",         romaji: "HINOSHITA KAHO",      series: "hasu", color: "#f8b500" },
+  { id: "sayaka",   name: "村野 さやか",   kana: "むらの さやか",         romaji: "MURANO SAYAKA",       series: "hasu", color: "#5383c3" },
+  { id: "rurino",   name: "大沢 瑠璃乃",   kana: "おおさわ るりの",       romaji: "OSAWA RURINO",        series: "hasu", color: "#e7609e" },
+  { id: "ginko",    name: "百生 吟子",     kana: "ももせ ぎんこ",         romaji: "MOMOSE GINKO",        series: "hasu", color: "#a2d7dd" },
+  { id: "izumi",    name: "桂城 泉",       kana: "かつらぎ いずみ",       romaji: "KATSURAGI IZUMI",     series: "hasu", color: "#1ebecd" },
+  { id: "ceras",    name: "セラス 柳田 リリエンフェルト", kana: "せらす やなぎだ りりえんふぇると", romaji: "CERAS Y. LILIENFELD", series: "hasu", color: "#f56455" },
 
-  { id: "rurika",   name: "椿 ルリカ",     kana: "つばき るりか",         romaji: "TSUBAKI RURIKA",      series: "sim" },
-  { id: "anzu",     name: "滝沢 アンズ",   kana: "たきざわ あんず",       romaji: "TAKIZAWA ANZU",       series: "sim" },
+  { id: "rurika",   name: "椿 ルリカ",     kana: "つばき るりか",         romaji: "TSUBAKI RURIKA",      series: "sim", color: "#73b8e2" },
+  { id: "anzu",     name: "滝沢 アンズ",   kana: "たきざわ あんず",       romaji: "TAKIZAWA ANZU",       series: "sim", color: "#d81f35" },
 
-  { id: "aurora",   name: "此花 輝夜",     kana: "このはな おーろら",     romaji: "KONOHANA AURORA",     series: "ikzl" },
-  { id: "mai",      name: "麻布 麻衣",     kana: "あざぶ まい",           romaji: "AZABU MAI",           series: "ikzl" },
-  { id: "hanabi",   name: "駒形 花火",     kana: "こまがた はなび",       romaji: "KOMAGATA HANABI",     series: "ikzl" },
-  { id: "miracle",  name: "金澤 奇跡",     kana: "かなざわ みらくる",     romaji: "KANAZAWA MIRACLE",    series: "ikzl" },
-  { id: "polka",    name: "高橋 ポルカ",   kana: "たかはし ぽるか",       romaji: "TAKAHASHI POLKA",     series: "ikzl" },
+  { id: "aurora",   name: "此花 輝夜",     kana: "このはな おーろら",     romaji: "KONOHANA AURORA",     series: "ikzl", color: "#ff5b9d" },
+  { id: "mai",      name: "麻布 麻衣",     kana: "あざぶ まい",           romaji: "AZABU MAI",           series: "ikzl", color: "#4d93d9" },
+  { id: "hanabi",   name: "駒形 花火",     kana: "こまがた はなび",       romaji: "KOMAGATA HANABI",     series: "ikzl", color: "#ff4747" },
+  { id: "miracle",  name: "金澤 奇跡",     kana: "かなざわ みらくる",     romaji: "KANAZAWA MIRACLE",    series: "ikzl", color: "#ffb6c1" },
+  { id: "polka",    name: "高橋 ポルカ",   kana: "たかはし ぽるか",       romaji: "TAKAHASHI POLKA",     series: "ikzl", color: "#ffff66" },
 ];
+
+// CHARACTERS[].color は「ラブライブ！シリーズ メンバーカラーまとめ」(https://ratius.github.io/LLS/color.html) の
+// メンバー紹介（総合）の値。
 
 // perks: goods = コラボグッズなどの販売 / novelty = ノベルティ配布 / photo = パネルなどのフォトスポット
 // groups: 集合パネルが設置されるグループ（SERIES の id）。そのグループのキャラで絞り込むと表示される。

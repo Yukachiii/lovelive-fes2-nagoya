@@ -67,10 +67,17 @@
   }
 
   // ---------- filter UI ----------
+  // 塗りの上に載せる文字色。淡いメンバーカラーでは白文字が読めないので濃い色にする
+  function inkOn(hex) {
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? "#3b1d2a" : "#ffffff";
+  }
+
   function charChip(c, extraClass = "") {
-    const s = seriesById[c.series];
+    const color = c.color || seriesById[c.series].color;
     const count = STORES.filter(st => hasChar(st, c.id)).length;
-    return `<button type="button" class="chip ${extraClass}" style="--c:${s.color}" data-char="${c.id}" aria-pressed="${state.chars.has(c.id)}">${esc(c.name)}${count > 1 ? `<span class="n">${count}店</span>` : ""}</button>`;
+    return `<button type="button" class="chip ${extraClass}" style="--c:${color};--ci:${inkOn(color)}" data-char="${c.id}" aria-pressed="${state.chars.has(c.id)}">${esc(c.name)}${count > 1 ? `<span class="n">${count}店</span>` : ""}</button>`;
   }
 
   function renderFilters() {
