@@ -17,8 +17,8 @@ const SERIES = [
   { id: "niji",    name: "虹ヶ咲学園",                  group: "虹ヶ咲",         color: "#e8a200" },
   { id: "liella",  name: "ラブライブ！スーパースター!!", group: "Liella!",       color: "#9b4fb0" },
   { id: "hasu",    name: "蓮ノ空女学院",                group: "蓮ノ空",         color: "#e8698a" },
-  { id: "sim",     name: "スクールアイドルミュージカル", group: "ミュージカル",   color: "#c8323c" },
   { id: "ikzl",    name: "イキヅライブ！",               group: "いきづらい部！", color: "#ec7a1c" },
+  { id: "sim",     name: "スクールアイドルミュージカル", group: "ミュージカル",   color: "#c8323c" },
 ];
 
 const CHARACTERS = [
@@ -54,14 +54,14 @@ const CHARACTERS = [
   { id: "izumi",    name: "桂城 泉",       kana: "かつらぎ いずみ",       romaji: "KATSURAGI IZUMI",     series: "hasu", color: "#1ebecd" },
   { id: "ceras",    name: "セラス 柳田 リリエンフェルト", kana: "せらす やなぎだ りりえんふぇると", romaji: "CERAS Y. LILIENFELD", series: "hasu", color: "#f56455" },
 
-  { id: "rurika",   name: "椿 ルリカ",     kana: "つばき るりか",         romaji: "TSUBAKI RURIKA",      series: "sim", color: "#73b8e2" },
-  { id: "anzu",     name: "滝沢 アンズ",   kana: "たきざわ あんず",       romaji: "TAKIZAWA ANZU",       series: "sim", color: "#d81f35" },
-
+  { id: "polka",    name: "高橋 ポルカ",   kana: "たかはし ぽるか",       romaji: "TAKAHASHI POLKA",     series: "ikzl", color: "#ffff66" },
   { id: "aurora",   name: "此花 輝夜",     kana: "このはな おーろら",     romaji: "KONOHANA AURORA",     series: "ikzl", color: "#ff5b9d" },
   { id: "mai",      name: "麻布 麻衣",     kana: "あざぶ まい",           romaji: "AZABU MAI",           series: "ikzl", color: "#4d93d9" },
   { id: "hanabi",   name: "駒形 花火",     kana: "こまがた はなび",       romaji: "KOMAGATA HANABI",     series: "ikzl", color: "#ff4747" },
   { id: "miracle",  name: "金澤 奇跡",     kana: "かなざわ みらくる",     romaji: "KANAZAWA MIRACLE",    series: "ikzl", color: "#ffb6c1" },
-  { id: "polka",    name: "高橋 ポルカ",   kana: "たかはし ぽるか",       romaji: "TAKAHASHI POLKA",     series: "ikzl", color: "#ffff66" },
+
+  { id: "rurika",   name: "椿 ルリカ",     kana: "つばき るりか",         romaji: "TSUBAKI RURIKA",      series: "sim", color: "#73b8e2" },
+  { id: "anzu",     name: "滝沢 アンズ",   kana: "たきざわ あんず",       romaji: "TAKIZAWA ANZU",       series: "sim", color: "#d81f35" },
 ];
 
 // CHARACTERS[].color は「ラブライブ！シリーズ メンバーカラーまとめ」(https://ratius.github.io/LLS/color.html) の
