@@ -11,7 +11,7 @@
   const seriesById = Object.fromEntries(SERIES.map(s => [s.id, s]));
   const charById = Object.fromEntries(CHARACTERS.map(c => [c.id, c]));
 
-  const state = { chars: new Set(), perks: new Set(), mode: "any", q: "" };
+  const state = { chars: new Set(), perks: new Set(), mode: "any", groups: true, q: "" };
 
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
@@ -19,12 +19,13 @@
     .replace(/[ァ-ヶ]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))
     .replace(/[\s・.]/g, "");
 
-  // ---------- URL state (?c=maki,izumi&p=goods&m=all&q=...) ----------
+  // ---------- URL state (?c=maki,izumi&p=goods&m=all&g=0&q=...) ----------
   function readUrl() {
     const p = new URLSearchParams(location.search);
     (p.get("c") || "").split(",").filter(id => charById[id]).forEach(id => state.chars.add(id));
     (p.get("p") || "").split(",").filter(id => PERKS.some(k => k.id === id)).forEach(id => state.perks.add(id));
     if (p.get("m") === "all") state.mode = "all";
+    if (p.get("g") === "0") state.groups = false;
     state.q = p.get("q") || "";
   }
   function writeUrl() {
@@ -32,14 +33,16 @@
     if (state.chars.size) p.set("c", [...state.chars].join(","));
     if (state.perks.size) p.set("p", [...state.perks].join(","));
     if (state.mode === "all") p.set("m", "all");
+    if (!state.groups) p.set("g", "0");
     if (state.q) p.set("q", state.q);
     const qs = p.toString();
     try { history.replaceState(null, "", qs ? "?" + qs : location.pathname); } catch (_) {}
   }
 
   // ---------- matching ----------
-  // 個別に描かれているか、そのキャラのグループの集合パネルがあるか
-  const hasChar = (store, id) => store.chars.includes(id) || (store.groups || []).includes(charById[id].series);
+  // 個別に描かれているか、（切替が有効なら）そのキャラのグループの集合パネルがあるか
+  const hasChar = (store, id) => store.chars.includes(id) ||
+    (state.groups && (store.groups || []).includes(charById[id].series));
 
   function storeText(store) {
     const names = store.chars.map(id => charById[id]).flatMap(c => [c.name, c.kana, c.romaji, seriesById[c.series].group, seriesById[c.series].name]);
@@ -92,6 +95,7 @@
     document.querySelectorAll(".perk-toggle").forEach(b => b.setAttribute("aria-pressed", state.perks.has(b.dataset.perk)));
     $("mode-any").setAttribute("aria-pressed", state.mode === "any");
     $("mode-all").setAttribute("aria-pressed", state.mode === "all");
+    $("groups").checked = state.groups;
     if ($("q").value !== state.q) $("q").value = state.q;
   }
 
@@ -105,7 +109,7 @@
     const selectedSeries = new Set([...state.chars].map(id => charById[id].series));
     const groupChips = (store.groups || []).map(id => {
       const s = seriesById[id];
-      const on = selectedSeries.has(id) ? " on" : "";
+      const on = state.groups && selectedSeries.has(id) ? " on" : "";
       return `<span class="group-chip${on}" style="--c:${s.color}">${esc(s.group)} 集合パネル</span>`;
     }).join("");
     const cast = `<div class="cast">${store.chars.map(id => {
@@ -195,9 +199,11 @@
   });
   $("mode-any").addEventListener("click", () => { state.mode = "any"; update(); });
   $("mode-all").addEventListener("click", () => { state.mode = "all"; update(); });
+  $("groups").addEventListener("change", e => { state.groups = e.target.checked; renderFilters(); update(); });
   $("q").addEventListener("input", e => { state.q = e.target.value; renderResults(); writeUrl(); });
   $("clear").addEventListener("click", () => {
     state.chars.clear(); state.perks.clear(); state.q = ""; state.mode = "any";
+    if (!state.groups) { state.groups = true; renderFilters(); }
     update();
   });
 
