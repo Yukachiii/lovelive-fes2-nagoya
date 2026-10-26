@@ -1,0 +1,192 @@
+(() => {
+  "use strict";
+
+  const ICONS = {
+    goods: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
+    novelty: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8c-1.5-3-5-3.5-5-1.5S10 8 12 8zm0 0c1.5-3 5-3.5 5-1.5S14 8 12 8z"/></svg>',
+    photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  };
+
+  const seriesById = Object.fromEntries(SERIES.map(s => [s.id, s]));
+  const charById = Object.fromEntries(CHARACTERS.map(c => [c.id, c]));
+
+  const state = { chars: new Set(), perks: new Set(), mode: "any", q: "" };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  const norm = s => String(s).toLowerCase().normalize("NFKC")
+    .replace(/[ァ-ヶ]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))
+    .replace(/[\s・.]/g, "");
+
+  // ---------- URL state (?c=maki,izumi&p=goods&m=all&q=...) ----------
+  function readUrl() {
+    const p = new URLSearchParams(location.search);
+    (p.get("c") || "").split(",").filter(id => charById[id]).forEach(id => state.chars.add(id));
+    (p.get("p") || "").split(",").filter(id => PERKS.some(k => k.id === id)).forEach(id => state.perks.add(id));
+    if (p.get("m") === "all") state.mode = "all";
+    state.q = p.get("q") || "";
+  }
+  function writeUrl() {
+    const p = new URLSearchParams();
+    if (state.chars.size) p.set("c", [...state.chars].join(","));
+    if (state.perks.size) p.set("p", [...state.perks].join(","));
+    if (state.mode === "all") p.set("m", "all");
+    if (state.q) p.set("q", state.q);
+    const qs = p.toString();
+    try { history.replaceState(null, "", qs ? "?" + qs : location.pathname); } catch (_) {}
+  }
+
+  // ---------- matching ----------
+  function storeText(store) {
+    const names = store.chars.map(id => charById[id]).flatMap(c => [c.name, c.kana, c.romaji, seriesById[c.series].group, seriesById[c.series].name]);
+    return norm([store.name, store.genre, ...names].join(" "));
+  }
+  const textIndex = new Map(STORES.map(s => [s.id, storeText(s)]));
+
+  function matches(store) {
+    if (state.chars.size) {
+      const has = [...state.chars].map(id => store.chars.includes(id));
+      if (state.mode === "all" ? !has.every(Boolean) : !has.some(Boolean)) return false;
+    }
+    for (const p of state.perks) if (!store.perks.includes(p)) return false;
+    if (state.q) {
+      const words = state.q.trim().split(/[\s　]+/).filter(Boolean).map(norm);
+      const t = textIndex.get(store.id);
+      if (!words.every(w => t.includes(w))) return false;
+    }
+    return true;
+  }
+
+  // ---------- filter UI ----------
+  function charChip(c, extraClass = "") {
+    const s = seriesById[c.series];
+    const count = STORES.filter(st => st.chars.includes(c.id)).length;
+    return `<button type="button" class="chip ${extraClass}" style="--c:${s.color}" data-char="${c.id}" aria-pressed="${state.chars.has(c.id)}">${esc(c.name)}${count > 1 ? `<span class="n">${count}店</span>` : ""}</button>`;
+  }
+
+  function renderFilters() {
+    $("series-list").innerHTML = SERIES.map(s => {
+      const cs = CHARACTERS.filter(c => c.series === s.id);
+      return `<div class="series">
+        <button type="button" class="series-name" style="--c:${s.color}" data-series="${s.id}" title="${esc(s.group)}を全員選択／解除">
+          <span>${esc(s.group)}<small>${esc(s.name)}</small></span>
+        </button>
+        <div class="chips">${cs.map(c => charChip(c)).join("")}</div>
+      </div>`;
+    }).join("");
+
+    $("perk-list").innerHTML = PERKS.map(p => {
+      const n = STORES.filter(s => s.perks.includes(p.id)).length;
+      return `<button type="button" class="perk-toggle" data-perk="${p.id}" aria-pressed="${state.perks.has(p.id)}" title="${esc(p.long)}">${ICONS[p.id]}${esc(p.label)}<span class="n">${n}店</span></button>`;
+    }).join("");
+  }
+
+  function syncFilterState() {
+    document.querySelectorAll("#series-list .chip").forEach(b => b.setAttribute("aria-pressed", state.chars.has(b.dataset.char)));
+    document.querySelectorAll(".perk-toggle").forEach(b => b.setAttribute("aria-pressed", state.perks.has(b.dataset.perk)));
+    $("mode-any").setAttribute("aria-pressed", state.mode === "any");
+    $("mode-all").setAttribute("aria-pressed", state.mode === "all");
+    if ($("q").value !== state.q) $("q").value = state.q;
+  }
+
+  // ---------- cards ----------
+  function card(store) {
+    const perks = PERKS.map(p => {
+      const on = store.perks.includes(p.id);
+      return `<span class="perk${on ? "" : " off"}" title="${esc(p.long)}${on ? "" : "（なし）"}">${ICONS[p.id]}${esc(p.label)}</span>`;
+    }).join("");
+
+    const cast = store.chars.length
+      ? `<div class="cast">${store.chars.map(id => {
+          const c = charById[id];
+          const dim = state.chars.size && !state.chars.has(id) ? "dim" : "";
+          return charChip(c, dim);
+        }).join("")}</div>`
+      : `<p class="cast-note">${esc(store.note || "")}</p>`;
+
+    const L = store.links;
+    const links = [
+      L.web && `<a href="${esc(L.web)}" target="_blank" rel="noopener">公式サイト</a>`,
+      L.x && `<a href="${esc(L.x)}" target="_blank" rel="noopener">X</a>`,
+      L.instagram && `<a href="${esc(L.instagram)}" target="_blank" rel="noopener">Instagram</a>`,
+    ].filter(Boolean).join("");
+
+    return `<article class="card" id="store-${store.id}">
+      <div class="card-img"><img src="${IMG_BASE}img_${store.id}.jpg" alt="${esc(store.name)}×『ラブライブ！シリーズ』キービジュアル" loading="lazy" referrerpolicy="no-referrer" width="1000" height="563"></div>
+      <div class="card-body">
+        <div class="card-title"><h3>${esc(store.name)}</h3><span class="genre">${esc(store.genre)}</span></div>
+        <div class="perks">${perks}</div>
+        ${cast}
+        <div class="card-foot">
+          <span class="status">コラボ詳細：<b>後日発表</b></span>
+          <span class="links">${links}</span>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function renderResults() {
+    const hits = STORES.filter(matches);
+    $("grid").innerHTML = hits.map(card).join("");
+    $("count").innerHTML = `${STORES.length}店舗中 <b>${hits.length}</b> 店舗`;
+    $("empty").hidden = hits.length > 0;
+
+    const active = state.chars.size || state.perks.size || state.q;
+    $("clear").disabled = !active;
+
+    $("selected").innerHTML = [...state.chars].map(id => charChip(charById[id], "sel")).join("");
+
+    const groupStores = STORES.filter(s => !s.chars.length);
+    const hiddenGroup = (state.chars.size || state.q) ? groupStores.filter(s => !hits.includes(s)) : [];
+    $("group-note").hidden = !hiddenGroup.length;
+    $("group-note").textContent = hiddenGroup.length
+      ? `※ ${hiddenGroup.map(s => s.name).join("・")}はキャラクター名の記載がない集合ビジュアルのため、キャラ絞り込み時は表示していません。`
+      : "";
+  }
+
+  function update() {
+    syncFilterState();
+    renderResults();
+    writeUrl();
+  }
+
+  // ---------- events ----------
+  document.addEventListener("click", e => {
+    const chip = e.target.closest("[data-char]");
+    if (chip) {
+      const id = chip.dataset.char;
+      state.chars.has(id) ? state.chars.delete(id) : state.chars.add(id);
+      return update();
+    }
+    const series = e.target.closest("[data-series]");
+    if (series) {
+      const ids = CHARACTERS.filter(c => c.series === series.dataset.series).map(c => c.id);
+      const allOn = ids.every(id => state.chars.has(id));
+      ids.forEach(id => allOn ? state.chars.delete(id) : state.chars.add(id));
+      if (!allOn && state.mode === "all") state.mode = "any";
+      return update();
+    }
+    const perk = e.target.closest("[data-perk]");
+    if (perk) {
+      const id = perk.dataset.perk;
+      state.perks.has(id) ? state.perks.delete(id) : state.perks.add(id);
+      return update();
+    }
+  });
+  $("mode-any").addEventListener("click", () => { state.mode = "any"; update(); });
+  $("mode-all").addEventListener("click", () => { state.mode = "all"; update(); });
+  $("q").addEventListener("input", e => { state.q = e.target.value; renderResults(); writeUrl(); });
+  $("clear").addEventListener("click", () => {
+    state.chars.clear(); state.perks.clear(); state.q = ""; state.mode = "any";
+    update();
+  });
+
+  // ---------- boot ----------
+  $("link-source").href = SOURCE_URL;
+  $("link-source2").href = SOURCE_URL;
+  $("link-map").href = MAP_URL;
+  $("updated").textContent = UPDATED.replace(/-/g, "/");
+  readUrl();
+  renderFilters();
+  update();
+})();

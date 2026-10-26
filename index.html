@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ラブナゴヤ！コラボ店さがし</title>
+<meta name="description" content="『ラブライブ！シリーズ』×「ラブナゴヤ！フェス」のコラボ店を、キャラクターや特典（グッズ・ノベルティ・フォトスポット）で絞り込めるファンメイドの一覧です。">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">『ラブライブ！シリーズ』×「ラブナゴヤ！フェス」</p>
+    <h1>ラブナゴヤ！<br class="sp">コラボ店さがし</h1>
+    <p class="period"><span>開催期間</span> 2026年11月6日(金) 〜 12月6日(日)</p>
+    <p class="lead">推しのいるお店、特典の種類で参加16事業者を絞り込めます。</p>
+    <nav class="outlinks">
+      <a id="link-source" target="_blank" rel="noopener">公式特設ページ</a>
+      <a id="link-map" target="_blank" rel="noopener">参加店舗マップ（Googleマイマップ）</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="filters" aria-label="絞り込み">
+    <div class="filter-block">
+      <div class="filter-head">
+        <h2>キャラクター</h2>
+        <div class="seg" role="group" aria-label="複数選択時の条件">
+          <button type="button" id="mode-any" class="seg-btn" aria-pressed="true">いずれか</button>
+          <button type="button" id="mode-all" class="seg-btn" aria-pressed="false">全員そろう</button>
+        </div>
+      </div>
+      <div id="series-list" class="series-list"></div>
+    </div>
+
+    <div class="filter-block">
+      <div class="filter-head"><h2>特典</h2><span class="hint">選んだものがすべてある店舗</span></div>
+      <div id="perk-list" class="perk-list"></div>
+    </div>
+
+    <div class="filter-block search-row">
+      <label for="q" class="visually-hidden">店名・キャラ名で検索</label>
+      <input id="q" type="search" placeholder="店名・キャラ名で検索（ひらがな可）" autocomplete="off">
+    </div>
+  </section>
+
+  <div class="resultbar">
+    <p id="count" aria-live="polite"></p>
+    <button type="button" id="clear" class="clear-btn">条件をクリア</button>
+  </div>
+  <div id="selected" class="selected"></div>
+
+  <section id="grid" class="grid" aria-label="コラボ店一覧"></section>
+  <p id="empty" class="empty" hidden>条件に合う店舗がありません。条件を減らしてみてください。</p>
+  <p id="group-note" class="group-note" hidden></p>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>出典：<a id="link-source2" target="_blank" rel="noopener">名鉄観光「『ラブライブ！シリーズ』×「ラブナゴヤ！フェス」Welcome to Nagoya!」</a>（<span id="updated"></span> 時点）。キャラクターは各事業者のキービジュアル表記から整理しています。コラボ内容の詳細は公式発表をご確認ください。</p>
+    <p>情報解禁前のコラボ詳細について、店舗やスタッフへの直接の問い合わせはお控えください。</p>
+    <p>本サイトは非公式のファンメイドです。画像は公式特設ページから参照しています。<br>
+    ©2013 プロジェクトラブライブ！ / ©2017 プロジェクトラブライブ！サンシャイン!! / ©2024 プロジェクトラブライブ！虹ヶ咲学園スクールアイドル同好会ムービー / ©2024 プロジェクトラブライブ！スーパースター!! / ©2026 プロジェクトラブライブ！蓮ノ空女学院スクールアイドルクラブ / ©プロジェクトラブライブ！スクールアイドルミュージカル / ©プロジェクトイキヅライブ！</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
