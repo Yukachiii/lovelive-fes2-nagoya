@@ -132,7 +132,10 @@
       : `<p class="collab-none">コラボ内容は未発表です。</p>`;
 
     const shops = `<ul class="shops">${store.shops.map(sh => `<li>
-        <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}</span>
+        <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}
+          ${sh.alert ? `<span class="shop-alert">${esc(sh.alert)}</span>` : ""}
+          ${sh.hours ? `<span class="shop-hours">${esc(sh.hours)}</span>` : ""}
+          ${sh.closed ? `<span class="shop-hours">休み：${esc(sh.closed)}</span>` : ""}</span>
         <a href="https://www.google.com/maps/search/?api=1&amp;query=${sh.lat},${sh.lng}" target="_blank" rel="noopener">地図</a>
       </li>`).join("")}</ul>`;
 
@@ -222,6 +225,7 @@
   $("map-embed").src = MAP_EMBED_URL;
   $("spot-count").textContent = STORES.reduce((n, s) => n + s.shops.length, 0);
   $("updated").textContent = UPDATED.replace(/-/g, "/");
+  $("hours-checked").textContent = UPDATED.replace(/-/g, "/");
   readUrl();
   renderFilters();
   update();

@@ -10,6 +10,7 @@ const MAP_URL = `https://www.google.com/maps/d/viewer?mid=${MAP_ID}&hl=ja&ll=35.
 const MAP_EMBED_URL = `https://www.google.com/maps/d/embed?mid=${MAP_ID}&hl=ja&ll=35.146779642004724%2C136.91725911958216&z=12`;
 const IMG_BASE = SOURCE_URL + "img/";
 const UPDATED = "2026-10-26";
+// shops[].hours / closed / alert は各事業者の公式サイト・公式Xで 2026-10-26 に確認した内容。
 
 const SERIES = [
   { id: "mus",     name: "ラブライブ！",               group: "μ's",           color: "#e4007f" },
@@ -86,8 +87,8 @@ const STORES = [
       { kind: "other", title: "販売場所・支払い", text: "名駅地下支店・金山駅旅行センター。現金のみ（QRコード決済・クレジット不可）" },
     ],
     shops: [
-      { name: "名駅地下支店", lat: 35.1699422, lng: 136.884366, note: "スタンプ帳販売" },
-      { name: "金山駅旅行センター", lat: 35.1427366, lng: 136.9013824, note: "スタンプ帳販売・景品引換場所" },
+      { name: "名駅地下支店", lat: 35.1699422, lng: 136.884366, note: "スタンプ帳販売", hours: "10:00〜18:30（予約業務は18:00まで）", closed: "地下街休業日・年末年始" },
+      { name: "金山駅旅行センター", lat: 35.1427366, lng: 136.9013824, note: "スタンプ帳販売・景品引換場所", hours: "10:00〜18:30（新規受付は18:00まで）", closed: "年末年始" },
     ],
     links: { web: "https://www.mwt.co.jp/", x: "https://twitter.com/MWT_Travel" } },
 
@@ -100,8 +101,8 @@ const STORES = [
       { kind: "other", title: "対象店舗", text: "池下店、栄店、中村公園店、土古店、大江店" },
     ],
     shops: [
-      { name: "池下店", lat: 35.1684202, lng: 136.9446173 },
-      { name: "中村公園店", lat: 35.1669523, lng: 136.8557206 },
+      { name: "池下店", lat: 35.1684202, lng: 136.9446173, hours: "11:00〜22:00", closed: "火曜（祝日の場合は翌日）" },
+      { name: "中村公園店", lat: 35.1669523, lng: 136.8557206, hours: "11:00〜22:00", closed: "火曜（祝日の場合は翌日）" },
     ],
     links: { web: "https://www.aokispizza.co.jp/", x: "https://x.com/aokis_pizza" } },
 
@@ -114,7 +115,7 @@ const STORES = [
       { kind: "photo", title: "コラボパネル", text: "店舗に設置" },
     ],
     shops: [
-      { name: "KITTE名古屋店", lat: 35.1732412, lng: 136.8821961 },
+      { name: "KITTE名古屋店", lat: 35.1732412, lng: 136.8821961, hours: "10:00〜20:00（飲食メニューは11:00〜）", closed: "1月1日" },
     ],
     links: { web: "https://www.aoyagiuirou.co.jp/", x: "https://twitter.com/aoyagi_souhonke" } },
 
@@ -127,7 +128,7 @@ const STORES = [
       { kind: "other", title: "対象店舗", text: "あつたnagAya店（名鉄神宮前駅西口、10:00〜18:00）。スタンプラリーのスタンプも設置" },
     ],
     shops: [
-      { name: "あつたnagAya店", lat: 35.1254506, lng: 136.9118531 },
+      { name: "あつたnagAya店", lat: 35.1254506, lng: 136.9118531, hours: "10:00〜18:00" },
     ],
     links: { web: "https://www.ebisato.co.jp/index.php", x: "https://x.com/Ebisato1989" } },
 
@@ -140,7 +141,7 @@ const STORES = [
       { kind: "photo", title: "フォトパネル＆コラボのぼり", text: "名鉄神宮前駅前売店" },
     ],
     shops: [
-      { name: "名鉄神宮駅前喫茶部", lat: 35.1264325, lng: 136.9111846 },
+      { name: "名鉄神宮駅前喫茶部", lat: 35.1264325, lng: 136.9111846, hours: "平日 9:00〜17:30／土日祝 8:30〜18:00", closed: "水曜（祝日の場合は木曜）と公式サイトに記載" },
     ],
     links: { web: "https://kiyome.net/", x: "https://x.com/kiyome_honke" } },
 
@@ -154,7 +155,7 @@ const STORES = [
       { kind: "photo", title: "等身大フォトパネル", text: "名古屋本店 2階" },
     ],
     shops: [
-      { name: "名古屋本店", lat: 35.1729777, lng: 136.8666777 },
+      { name: "名古屋本店", lat: 35.1729777, lng: 136.8666777, hours: "9:17〜18:17" },
     ],
     links: { web: "https://www.kohgen.com/", x: "https://x.com/kohgen_official" } },
 
@@ -167,7 +168,7 @@ const STORES = [
       { kind: "other", title: "そばじまSHOP", text: "平日限定営業。ノベルティ・パネルの詳細は未発表" },
     ],
     shops: [
-      { name: "側島製罐（そばじまSHOP）", lat: 35.1862033, lng: 136.8100391, note: "そばじまSHOPは平日限定" },
+      { name: "側島製罐（そばじまSHOP）", lat: 35.1862033, lng: 136.8100391, note: "そばじまSHOPは平日限定", hours: "平日のみ営業（営業時間は公式に記載なし）" },
     ],
     links: { web: "https://sobajima.jp/", x: "https://x.com/sobajimacan" } },
 
@@ -178,7 +179,7 @@ const STORES = [
       { kind: "photo", title: "若菜四季フォトパネル", text: "生命館地下2階 あいち・なごやノーベル賞受賞者記念室" },
     ],
     shops: [
-      { name: "FUJIなごや科学館", lat: 35.1650768, lng: 136.8997026 },
+      { name: "FUJIなごや科学館", lat: 35.1650768, lng: 136.8997026, hours: "9:30〜17:00（入館は16:30まで）", closed: "月曜（祝日の場合は直後の平日）、第3金曜（祝日の場合は第4金曜）" },
     ],
     links: { web: "https://www.ncsm.city.nagoya.jp/", x: "https://x.com/ncsm_Nagoya" } },
 
@@ -191,8 +192,8 @@ const STORES = [
       { kind: "photo", title: "名古屋市金山観光案内所", text: "スクールアイドルミュージカル＆いきづらい部！ 集合パネル" },
     ],
     shops: [
-      { name: "オアシス21 iセンター（名古屋市観光案内所）", lat: 35.1705798, lng: 136.9094715 },
-      { name: "名古屋市金山観光案内所", lat: 35.1433255, lng: 136.9014746 },
+      { name: "オアシス21 iセンター（名古屋市観光案内所）", lat: 35.1705798, lng: 136.9094715, hours: "10:00〜20:00（物販は18:00まで）", closed: "1月1日、法定点検日" },
+      { name: "名古屋市金山観光案内所", lat: 35.1433255, lng: 136.9014746, hours: "9:00〜19:00（物販は17:00まで）", closed: "12月29日〜1月1日" },
     ],
     links: { web: "https://www.nagoya-info.jp/", x: "https://x.com/nagoyainfojp" } },
 
@@ -205,8 +206,8 @@ const STORES = [
       { kind: "photo", title: "フォトパネル", text: "八事本店：金澤奇跡／名駅店：セラス 柳田 リリエンフェルト" },
     ],
     shops: [
-      { name: "名駅店", lat: 35.1699736, lng: 136.8860368 },
-      { name: "八事本店", lat: 35.1314761, lng: 136.9555056 },
+      { name: "名駅店", lat: 35.1699736, lng: 136.8860368, hours: "11:30〜15:00（LO 14:00）／17:00〜21:30（LO 20:30）", closed: "年中無休", alert: "11月9日(月)は臨時休業" },
+      { name: "八事本店", lat: 35.1314761, lng: 136.9555056, hours: "平日 11:00〜14:30（LO 14:00）／17:30〜21:00（LO 20:00）、土日祝 11:00〜14:30（LO 14:00）／17:00〜21:00（LO 20:00）" },
     ],
     links: { web: "https://www.hitsumabushiuya.com/", x: "https://x.com/hitsumabushiuya" } },
 
@@ -224,9 +225,9 @@ const STORES = [
       { kind: "other", title: "対象店舗", text: "本店・サンロード店・サカエチカ店・あつたnagAya店" },
     ],
     shops: [
-      { name: "本店", lat: 35.1398013, lng: 136.9035634 },
-      { name: "サカエチカ店", lat: 35.1695754, lng: 136.9067532 },
-      { name: "サンロード店", lat: 35.1700448, lng: 136.8845652 },
+      { name: "本店", lat: 35.1398013, lng: 136.9035634, hours: "9:00〜18:00" },
+      { name: "サカエチカ店", lat: 35.1695754, lng: 136.9067532, hours: "10:00〜20:00" },
+      { name: "サンロード店", lat: 35.1700448, lng: 136.8845652, hours: "10:00〜20:30" },
     ],
     links: { web: "https://myokoen.com/", x: "https://x.com/myokoen_758" } },
 
@@ -238,7 +239,7 @@ const STORES = [
       { kind: "other", title: "のぼり・カリテコバイク", text: "対象駐車場にコラボのぼり。コラボ限定のカリテコバイク30台が登場" },
     ],
     shops: [
-      { name: "めきょぱセンター", lat: 35.1687207, lng: 136.9084662 },
+      { name: "めきょぱセンター", lat: 35.1687207, lng: 136.9084662, hours: "営業時間は公式に記載なし" },
     ],
     links: { web: "https://www.mkyosho.co.jp/business/", x: "https://x.com/mkp_jp" } },
 
@@ -249,7 +250,7 @@ const STORES = [
       { kind: "photo", title: "大沢瑠璃乃フォトパネル", text: "なごみゃ エスカ店" },
     ],
     shops: [
-      { name: "なごみゃエスカ店", lat: 35.1698128, lng: 136.8804703 },
+      { name: "なごみゃエスカ店", lat: 35.1698128, lng: 136.8804703, hours: "10:00〜20:30", closed: "エスカの定休日に準ずる" },
     ],
     links: { web: "https://www.meitetsu-souken.co.jp/service/2026061816122814.html", x: "https://x.com/nagomiya_esca" } },
 
@@ -264,7 +265,7 @@ const STORES = [
         text: "矢場町本店、栄松坂屋店、栄LACHIC店、栄セントライズ店、名古屋城金シャチ横丁店、名古屋駅エスカ店、名古屋駅三井ビル北館店、名古屋駅ルーセント店、中部国際空港店、イオンモールナゴヤドーム前店、昔の矢場とん 大須観音本店、豊田T-FACE店、NEOPASA岡崎店、三井アウトレットパーク岡崎店、栄松坂屋地下店、名古屋駅ジェイアールタカシマヤ店、JR名古屋駅店、YABATON SHOP" },
     ],
     shops: [
-      { name: "YABATON SHOP おうち de 矢場とん", lat: 35.1617987, lng: 136.9061933 },
+      { name: "YABATON SHOP おうち de 矢場とん", lat: 35.1617987, lng: 136.9061933, hours: "11:00〜21:00", closed: "なし" },
     ],
     links: { web: "https://www.yabaton.com/", x: "https://x.com/YabatonO", instagram: "https://www.instagram.com/yabaton_official/" } },
 
@@ -272,9 +273,9 @@ const STORES = [
     perks: ["novelty", "photo"], chars: ["kanata", "polka", "natsumi", "anzu"],
     collab: [],
     shops: [
-      { name: "大久手山本屋", lat: 35.161484, lng: 136.9364074 },
-      { name: "神宮前店", lat: 35.1261556, lng: 136.9116522 },
-      { name: "桜通大津店", lat: 35.1741835, lng: 136.9065618 },
+      { name: "大久手山本屋", lat: 35.161484, lng: 136.9364074, hours: "11:00〜22:00", closed: "年中無休（2026年10月1日から）" },
+      { name: "神宮前店", lat: 35.1261556, lng: 136.9116522, hours: "平日 11:00〜20:00（LO 19:30）／土日祝 10:00〜20:00（LO 19:30）", closed: "年中無休（臨時休業あり）" },
+      { name: "桜通大津店", lat: 35.1741835, lng: 136.9065618, hours: "11:00〜22:00", closed: "年中無休（年末年始を除く）" },
     ],
     links: { web: "https://a-yamamotoya.co.jp/", x: "https://x.com/yamamotoya_miso" } },
 
@@ -288,8 +289,8 @@ const STORES = [
       { kind: "other", title: "スタンプ", text: "星空凛スタンプ：BINO栄店／桜坂しずくスタンプ：イオンタウン千種店" },
     ],
     shops: [
-      { name: "BINO栄店", lat: 35.1692591, lng: 136.906486 },
-      { name: "イオンタウン千種店", lat: 35.1614669, lng: 136.9241457 },
+      { name: "BINO栄店", lat: 35.1692591, lng: 136.906486, hours: "11:00〜21:00（LO 20:15）" },
+      { name: "イオンタウン千種店", lat: 35.1614669, lng: 136.9241457, hours: "11:00〜21:00（LO 20:15）" },
     ],
     links: { web: "https://www.wakashachiya.co.jp/", instagram: "https://www.instagram.com/wakashachiya/" } },
 ];

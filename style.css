@@ -249,6 +249,11 @@ main.wrap { padding-block: 24px 40px; }
 }
 .shop-name { min-width: 0; }
 .shop-name small { display: block; font-size: 11.5px; color: var(--accent); font-weight: 700; }
+.shop-hours { display: block; font-size: 11.5px; color: var(--muted); line-height: 1.55; font-variant-numeric: tabular-nums; }
+.shop-alert {
+  display: inline-block; margin: 2px 0 1px; padding: 0 6px; border-radius: 4px;
+  font-size: 11.5px; font-weight: 700; background: var(--accent-soft); color: var(--accent);
+}
 .shops a { flex: none; font-size: 12.5px; font-weight: 700; text-underline-offset: 3px; }
 .shops a::after { content: " ↗"; }
 
