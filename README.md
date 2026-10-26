@@ -19,6 +19,8 @@
 
 - `STORES[].chars` にキャラクターの `id` を並べると、その店舗に紐づきます。
 - `STORES[].shops` は参加店舗（スタンプラリースポット）。`name` / `lat` / `lng` と、必要なら `note`。出典は[スタンプラリースポットマップ](https://www.google.com/maps/d/viewer?mid=1gvdgaUiNzDugl8GMDz6dLPA-JiHM5l4)。
+- `STORES[].collab` はコラボ内容。`{ kind: "goods" | "novelty" | "photo" | "other", title, price?, text? }`。`post` に告知ポストのURL。
+- `STORES[].groups` は集合パネルのあるグループ（`SERIES` の id）。そのグループのキャラで絞り込んだときにも表示されます。
 - `STORES[].perks` は `goods`（グッズ販売）/ `novelty`（ノベルティ）/ `photo`（フォトスポット）。
 - `UPDATED` を更新日に書き換えると、フッターの「◯時点」に反映されます。
 

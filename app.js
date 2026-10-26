@@ -5,6 +5,7 @@
     goods: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>',
     novelty: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8c-1.5-3-5-3.5-5-1.5S10 8 12 8zm0 0c1.5-3 5-3.5 5-1.5S14 8 12 8z"/></svg>',
     photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+    other: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
   };
 
   const seriesById = Object.fromEntries(SERIES.map(s => [s.id, s]));
@@ -37,15 +38,20 @@
   }
 
   // ---------- matching ----------
+  // 個別に描かれているか、そのキャラのグループの集合パネルがあるか
+  const hasChar = (store, id) => store.chars.includes(id) || (store.groups || []).includes(charById[id].series);
+
   function storeText(store) {
     const names = store.chars.map(id => charById[id]).flatMap(c => [c.name, c.kana, c.romaji, seriesById[c.series].group, seriesById[c.series].name]);
-    return norm([store.name, store.genre, ...store.shops.map(sh => sh.name), ...names].join(" "));
+    const groups = (store.groups || []).map(id => seriesById[id]).flatMap(s => [s.group, s.name]);
+    const collab = store.collab.flatMap(c => [c.title, c.text || ""]);
+    return norm([store.name, store.genre, ...store.shops.map(sh => sh.name), ...names, ...groups, ...collab].join(" "));
   }
   const textIndex = new Map(STORES.map(s => [s.id, storeText(s)]));
 
   function matches(store) {
     if (state.chars.size) {
-      const has = [...state.chars].map(id => store.chars.includes(id));
+      const has = [...state.chars].map(id => hasChar(store, id));
       if (state.mode === "all" ? !has.every(Boolean) : !has.some(Boolean)) return false;
     }
     for (const p of state.perks) if (!store.perks.includes(p)) return false;
@@ -60,7 +66,7 @@
   // ---------- filter UI ----------
   function charChip(c, extraClass = "") {
     const s = seriesById[c.series];
-    const count = STORES.filter(st => st.chars.includes(c.id)).length;
+    const count = STORES.filter(st => hasChar(st, c.id)).length;
     return `<button type="button" class="chip ${extraClass}" style="--c:${s.color}" data-char="${c.id}" aria-pressed="${state.chars.has(c.id)}">${esc(c.name)}${count > 1 ? `<span class="n">${count}店</span>` : ""}</button>`;
   }
 
@@ -96,13 +102,23 @@
       return `<span class="perk${on ? "" : " off"}" title="${esc(p.long)}${on ? "" : "（なし）"}">${ICONS[p.id]}${esc(p.label)}</span>`;
     }).join("");
 
-    const cast = store.chars.length
-      ? `<div class="cast">${store.chars.map(id => {
-          const c = charById[id];
-          const dim = state.chars.size && !state.chars.has(id) ? "dim" : "";
-          return charChip(c, dim);
-        }).join("")}</div>`
-      : `<p class="cast-note">${esc(store.note || "")}</p>`;
+    const selectedSeries = new Set([...state.chars].map(id => charById[id].series));
+    const groupChips = (store.groups || []).map(id => {
+      const s = seriesById[id];
+      const on = selectedSeries.has(id) ? " on" : "";
+      return `<span class="group-chip${on}" style="--c:${s.color}">${esc(s.group)} 集合パネル</span>`;
+    }).join("");
+    const cast = `<div class="cast">${store.chars.map(id => {
+        const dim = state.chars.size && !state.chars.has(id) ? "dim" : "";
+        return charChip(charById[id], dim);
+      }).join("")}${groupChips}</div>`;
+
+    const collab = store.collab.length
+      ? `<ul class="collab">${store.collab.map(c => `<li class="collab-${c.kind}">
+          ${ICONS[c.kind] || ICONS.other}
+          <div><p class="collab-title">${esc(c.title)}${c.price ? ` <span class="price">${esc(c.price)}</span>` : ""}</p>${c.text ? `<p class="collab-text">${esc(c.text)}</p>` : ""}</div>
+        </li>`).join("")}</ul>`
+      : `<p class="collab-none">コラボ内容は未発表です。</p>`;
 
     const shops = `<ul class="shops">${store.shops.map(sh => `<li>
         <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}</span>
@@ -122,9 +138,13 @@
         <div class="card-title"><h3>${esc(store.name)}</h3><span class="genre">${esc(store.genre)}</span></div>
         <div class="perks">${perks}</div>
         ${cast}
+        ${collab}
+        <p class="shops-label">スタンプラリースポット</p>
         ${shops}
         <div class="card-foot">
-          <span class="status">コラボ詳細：<b>後日発表</b></span>
+          ${store.post
+            ? `<a class="status" href="${esc(store.post)}" target="_blank" rel="noopener">告知ポストを見る</a>`
+            : `<span class="status">コラボ詳細：<b>後日発表</b></span>`}
           <span class="links">${links}</span>
         </div>
       </div>
@@ -142,13 +162,6 @@
     $("clear").disabled = !active;
 
     $("selected").innerHTML = [...state.chars].map(id => charChip(charById[id], "sel")).join("");
-
-    const groupStores = STORES.filter(s => !s.chars.length);
-    const hiddenGroup = (state.chars.size || state.q) ? groupStores.filter(s => !hits.includes(s)) : [];
-    $("group-note").hidden = !hiddenGroup.length;
-    $("group-note").textContent = hiddenGroup.length
-      ? `※ ${hiddenGroup.map(s => s.name).join("・")}はキャラクター名の記載がない集合ビジュアルのため、キャラ絞り込み時は表示していません。`
-      : "";
   }
 
   function update() {
@@ -192,6 +205,7 @@
   $("link-source").href = SOURCE_URL;
   $("link-source2").href = SOURCE_URL;
   $("link-map").href = MAP_URL;
+  $("link-thread").href = THREAD_URL;
   $("map-embed").src = MAP_EMBED_URL;
   $("spot-count").textContent = STORES.reduce((n, s) => n + s.shops.length, 0);
   $("updated").textContent = UPDATED.replace(/-/g, "/");
