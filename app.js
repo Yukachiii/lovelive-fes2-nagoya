@@ -39,7 +39,7 @@
   // ---------- matching ----------
   function storeText(store) {
     const names = store.chars.map(id => charById[id]).flatMap(c => [c.name, c.kana, c.romaji, seriesById[c.series].group, seriesById[c.series].name]);
-    return norm([store.name, store.genre, ...names].join(" "));
+    return norm([store.name, store.genre, ...store.shops.map(sh => sh.name), ...names].join(" "));
   }
   const textIndex = new Map(STORES.map(s => [s.id, storeText(s)]));
 
@@ -104,6 +104,11 @@
         }).join("")}</div>`
       : `<p class="cast-note">${esc(store.note || "")}</p>`;
 
+    const shops = `<ul class="shops">${store.shops.map(sh => `<li>
+        <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}</span>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=${sh.lat},${sh.lng}" target="_blank" rel="noopener">地図</a>
+      </li>`).join("")}</ul>`;
+
     const L = store.links;
     const links = [
       L.web && `<a href="${esc(L.web)}" target="_blank" rel="noopener">公式サイト</a>`,
@@ -117,6 +122,7 @@
         <div class="card-title"><h3>${esc(store.name)}</h3><span class="genre">${esc(store.genre)}</span></div>
         <div class="perks">${perks}</div>
         ${cast}
+        ${shops}
         <div class="card-foot">
           <span class="status">コラボ詳細：<b>後日発表</b></span>
           <span class="links">${links}</span>
@@ -128,7 +134,8 @@
   function renderResults() {
     const hits = STORES.filter(matches);
     $("grid").innerHTML = hits.map(card).join("");
-    $("count").innerHTML = `${STORES.length}店舗中 <b>${hits.length}</b> 店舗`;
+    const shopCount = hits.reduce((n, s) => n + s.shops.length, 0);
+    $("count").innerHTML = `${STORES.length}事業者中 <b>${hits.length}</b> 事業者<span class="sub">（${shopCount}店舗）</span>`;
     $("empty").hidden = hits.length > 0;
 
     const active = state.chars.size || state.perks.size || state.q;
@@ -185,6 +192,8 @@
   $("link-source").href = SOURCE_URL;
   $("link-source2").href = SOURCE_URL;
   $("link-map").href = MAP_URL;
+  $("map-embed").src = MAP_EMBED_URL;
+  $("spot-count").textContent = STORES.reduce((n, s) => n + s.shops.length, 0);
   $("updated").textContent = UPDATED.replace(/-/g, "/");
   readUrl();
   renderFilters();

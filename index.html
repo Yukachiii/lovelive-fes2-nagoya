@@ -21,7 +21,7 @@
     <p class="lead">推しのいるお店、特典の種類で参加16事業者を絞り込めます。</p>
     <nav class="outlinks">
       <a id="link-source" target="_blank" rel="noopener">公式特設ページ</a>
-      <a id="link-map" target="_blank" rel="noopener">参加店舗マップ（Googleマイマップ）</a>
+      <a id="link-map" target="_blank" rel="noopener">スタンプラリーマップ（Googleマイマップ）</a>
     </nav>
   </div>
 </header>
@@ -59,6 +59,21 @@
   <section id="grid" class="grid" aria-label="コラボ店一覧"></section>
   <p id="empty" class="empty" hidden>条件に合う店舗がありません。条件を減らしてみてください。</p>
   <p id="group-note" class="group-note" hidden></p>
+
+  <section class="rally" aria-labelledby="rally-title">
+    <div class="rally-text">
+      <h2 id="rally-title">スタンプラリー</h2>
+      <p>参加店舗 <b id="spot-count"></b> か所がスタンプラリーのスポットです。</p>
+      <dl class="rally-info">
+        <div><dt>スタンプ帳の販売</dt><dd>名鉄観光サービス 名駅地下支店・金山駅旅行センター（なくなり次第終了）</dd></div>
+        <div><dt>景品の引き換え</dt><dd>名鉄観光サービス 金山駅旅行センター</dd></div>
+      </dl>
+      <p class="rally-note">各店舗の「地図」から Google マップで場所を開けます。</p>
+    </div>
+    <div class="rally-map">
+      <iframe id="map-embed" title="ラブナゴヤ！フェス スタンプラリースポットマップ" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </section>
 </main>
 
 <footer class="foot">

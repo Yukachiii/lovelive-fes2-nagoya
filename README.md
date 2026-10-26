@@ -18,6 +18,7 @@
 公式の発表が更新されたら `data.js` を編集します。
 
 - `STORES[].chars` にキャラクターの `id` を並べると、その店舗に紐づきます。
+- `STORES[].shops` は参加店舗（スタンプラリースポット）。`name` / `lat` / `lng` と、必要なら `note`。出典は[スタンプラリースポットマップ](https://www.google.com/maps/d/viewer?mid=1gvdgaUiNzDugl8GMDz6dLPA-JiHM5l4)。
 - `STORES[].perks` は `goods`（グッズ販売）/ `novelty`（ノベルティ）/ `photo`（フォトスポット）。
 - `UPDATED` を更新日に書き換えると、フッターの「◯時点」に反映されます。
 
