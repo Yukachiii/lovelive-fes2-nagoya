@@ -48,7 +48,8 @@
     const names = store.chars.map(id => charById[id]).flatMap(c => [c.name, c.kana, c.romaji, seriesById[c.series].group, seriesById[c.series].name]);
     const groups = (store.groups || []).map(id => seriesById[id]).flatMap(s => [s.group, s.name]);
     const collab = store.collab.flatMap(c => [c.title, c.text || ""]);
-    return norm([store.name, store.genre, ...store.shops.map(sh => sh.name), ...names, ...groups, ...collab].join(" "));
+    const places = [...store.shops, ...(store.others || [])].map(sh => sh.name);
+    return norm([store.name, store.genre, ...places, ...names, ...groups, ...collab].join(" "));
   }
   const textIndex = new Map(STORES.map(s => [s.id, storeText(s)]));
 
@@ -131,13 +132,20 @@
         </li>`).join("")}</ul>`
       : `<p class="collab-none">コラボ内容は未発表です。</p>`;
 
+    const mapLink = sh => `<a href="https://www.google.com/maps/search/?api=1&amp;query=${sh.lat},${sh.lng}" target="_blank" rel="noopener">地図</a>`;
     const shops = `<ul class="shops">${store.shops.map(sh => `<li>
-        <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}
+        <span class="shop-name">${esc(sh.name)}${sh.stamps ? ` <span class="stamp-count">スタンプ×${sh.stamps}</span>` : ""}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}
           ${sh.alert ? `<span class="shop-alert">${esc(sh.alert)}</span>` : ""}
           ${sh.hours ? `<span class="shop-hours">${esc(sh.hours)}</span>` : ""}
           ${sh.closed ? `<span class="shop-hours">休み：${esc(sh.closed)}</span>` : ""}</span>
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=${sh.lat},${sh.lng}" target="_blank" rel="noopener">地図</a>
+        ${mapLink(sh)}
       </li>`).join("")}</ul>`;
+    const others = store.others && store.others.length
+      ? `<details class="others"><summary>${esc(store.othersLabel || "スタンプなしのコラボ対象店舗")}（${store.others.length}）</summary>
+          <ul class="shops">${store.others.map(sh => `<li>
+            <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}</span>${mapLink(sh)}
+          </li>`).join("")}</ul></details>`
+      : "";
 
     const L = store.links;
     const links = [
@@ -155,10 +163,11 @@
         ${collab}
         <p class="shops-label">スタンプラリースポット</p>
         ${shops}
+        ${others}
         <div class="card-foot">
           ${store.post
             ? `<a class="status" href="${esc(store.post)}" target="_blank" rel="noopener">告知ポストを見る</a>`
-            : `<span class="status">コラボ詳細：<b>後日発表</b></span>`}
+            : `<a class="status" href="${esc(SOURCE_URL)}" target="_blank" rel="noopener">特設ページで見る</a>`}
           <span class="links">${links}</span>
         </div>
       </div>
@@ -224,8 +233,9 @@
   $("link-thread").href = THREAD_URL;
   $("map-embed").src = MAP_EMBED_URL;
   $("spot-count").textContent = STORES.reduce((n, s) => n + s.shops.length, 0);
+  $("stamp-total").textContent = STORES.reduce((n, s) => n + s.shops.reduce((m, sh) => m + (sh.stamps || 0), 0), 0);
   $("updated").textContent = UPDATED.replace(/-/g, "/");
-  $("hours-checked").textContent = UPDATED.replace(/-/g, "/");
+  $("hours-checked").textContent = HOURS_CHECKED.replace(/-/g, "/");
   readUrl();
   renderFilters();
   update();
