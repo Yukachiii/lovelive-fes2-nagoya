@@ -143,7 +143,9 @@
     const others = store.others && store.others.length
       ? `<details class="others"><summary>${esc(store.othersLabel || "スタンプなしのコラボ対象店舗")}（${store.others.length}）</summary>
           <ul class="shops">${store.others.map(sh => `<li>
-            <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}</span>${mapLink(sh)}
+            <span class="shop-name">${esc(sh.name)}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}
+              ${sh.hours ? `<span class="shop-hours">${esc(sh.hours)}</span>` : ""}
+              ${sh.closed ? `<span class="shop-hours">休み：${esc(sh.closed)}</span>` : ""}</span>${mapLink(sh)}
           </li>`).join("")}</ul></details>`
       : "";
 
@@ -235,7 +237,7 @@
   $("spot-count").textContent = STORES.reduce((n, s) => n + s.shops.length, 0);
   $("stamp-total").textContent = STORES.reduce((n, s) => n + s.shops.reduce((m, sh) => m + (sh.stamps || 0), 0), 0);
   $("updated").textContent = UPDATED.replace(/-/g, "/");
-  $("hours-checked").textContent = HOURS_CHECKED.replace(/-/g, "/");
+  $("hours-checked").textContent = HOURS_CHECKED;
   readUrl();
   renderFilters();
   update();
