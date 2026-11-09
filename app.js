@@ -132,7 +132,11 @@
         </li>`).join("")}</ul>`
       : `<p class="collab-none">コラボ内容は未発表です。</p>`;
 
-    const mapLink = sh => `<a href="https://www.google.com/maps/search/?api=1&amp;query=${sh.lat},${sh.lng}" target="_blank" rel="noopener">地図</a>`;
+    const mapLink = sh => {
+      const key = `${store.id}/${sh.name}`;
+      const route = ACCESS[key] ? `<a href="route.html?to=${encodeURIComponent(key)}">経路</a>` : "";
+      return `<span class="shop-acts">${route}<a href="https://www.google.com/maps/search/?api=1&amp;query=${sh.lat},${sh.lng}" target="_blank" rel="noopener">地図</a></span>`;
+    };
     const shops = `<ul class="shops">${store.shops.map(sh => `<li>
         <span class="shop-name">${esc(sh.name)}${sh.stamps ? ` <span class="stamp-count">スタンプ×${sh.stamps}</span>` : ""}${sh.note ? `<small>${esc(sh.note)}</small>` : ""}
           ${sh.alert ? `<span class="shop-alert">${esc(sh.alert)}</span>` : ""}

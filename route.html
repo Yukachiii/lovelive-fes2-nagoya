@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ラブナゴヤ！経路検索</title>
+<meta name="description" content="『ラブライブ！シリーズ』×「ラブナゴヤ！フェス」のコラボ店・スタンプラリースポットを地図から選んで、Yahoo!乗換案内で経路を調べられるファンメイドのページです。">
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="route.css">
+</head>
+<body>
+
+<header class="masthead masthead-compact">
+  <div class="wrap">
+    <nav class="pagenav" aria-label="ページ切り替え">
+      <a href="./">コラボ店さがし</a>
+      <a href="route.html" aria-current="page">経路検索</a>
+    </nav>
+    <p class="eyebrow">『ラブライブ！シリーズ』×「ラブナゴヤ！フェス」</p>
+    <h1>ラブナゴヤ！<br class="sp">経路検索</h1>
+    <p class="lead">行きたい店舗を地図か一覧から選ぶと、Yahoo!乗換案内で経路を調べられます。</p>
+  </div>
+</header>
+
+<main class="wrap route-main">
+  <div class="route-layout">
+    <div class="route-panel">
+      <form id="route-form" class="route-form" aria-label="経路検索">
+        <div class="rf-points">
+          <div class="rf-row">
+            <label for="from" class="rf-label rf-from">出発</label>
+            <input id="from" type="search" list="station-list" placeholder="駅名・住所・スポット（例：名古屋）" autocomplete="off">
+          </div>
+          <div class="rf-row">
+            <label for="to" class="rf-label rf-to">到着</label>
+            <input id="to" type="search" list="station-list" placeholder="地図か一覧から店舗を選んでください" autocomplete="off">
+          </div>
+          <button type="button" id="swap" class="swap" title="出発と到着を入れ替える" aria-label="出発と到着を入れ替える">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M7 4v13M3.5 13.5 7 17l3.5-3.5M17 20V7M13.5 10.5 17 7l3.5 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <datalist id="station-list"></datalist>
+
+        <div class="rf-when">
+          <select id="type" aria-label="日時の指定方法">
+            <option value="1">出発</option>
+            <option value="4">到着</option>
+            <option value="3">始発</option>
+            <option value="2">終電</option>
+          </select>
+          <input id="date" type="date" aria-label="日付">
+          <input id="time" type="time" aria-label="時刻">
+          <button type="button" id="now" class="now-btn">現在</button>
+        </div>
+
+        <button type="submit" id="go" class="go-btn">Yahoo!乗換案内で経路を見る</button>
+        <p id="form-msg" class="rf-msg" aria-live="polite"></p>
+      </form>
+
+      <section id="dest" class="dest" aria-live="polite" hidden></section>
+
+      <section class="shop-list-wrap" aria-labelledby="list-title">
+        <div class="list-head">
+          <h2 id="list-title">店舗一覧</h2>
+          <span id="list-count" class="hint"></span>
+        </div>
+        <div class="list-tools">
+          <label for="lq" class="visually-hidden">店名・駅名で絞り込み</label>
+          <input id="lq" type="search" placeholder="店名・駅名で絞り込み" autocomplete="off">
+          <label class="switch" for="stamp-only">
+            <input type="checkbox" id="stamp-only">
+            <span class="switch-track" aria-hidden="true"></span>
+            <span>スタンプラリースポットだけ</span>
+          </label>
+        </div>
+        <div id="shop-list" class="shop-list"></div>
+      </section>
+    </div>
+
+    <div class="route-map">
+      <div id="map" class="map" role="region" aria-label="店舗の地図"></div>
+      <div id="map-msg" class="map-msg" hidden></div>
+      <ul class="map-legend" aria-label="地図の凡例">
+        <li><span class="pin pin-stamp" aria-hidden="true">1</span>スタンプラリースポット（数字はスタンプ数）</li>
+        <li><span class="pin pin-other" aria-hidden="true"></span>スタンプなしのコラボ対象店舗</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>経路は外部サイトの「Yahoo!乗換案内」で表示します。店舗はYahoo!乗換案内のスポット名で指定しているので、検索結果の到着地が目的の店舗になっているか確認してください。最寄り駅と徒歩時間は店舗からの直線距離をもとにした目安です（駅データ：<a href="https://express.heartrails.com/" target="_blank" rel="noopener">HeartRails Express</a>）。</p>
+    <p>店舗の位置は「ラブナゴヤ！フェス スタンプラリースポットマップ」（Googleマイマップ）、営業時間は各事業者の公式サイト・公式Xで <span id="hours-checked"></span> に確認したものです。お出かけ前に公式の最新情報をご確認ください。</p>
+    <p>本サイトは非公式のファンメイドです。<br>
+    ©2013 プロジェクトラブライブ！ / ©2017 プロジェクトラブライブ！サンシャイン!! / ©2024 プロジェクトラブライブ！虹ヶ咲学園スクールアイドル同好会ムービー / ©2024 プロジェクトラブライブ！スーパースター!! / ©2026 プロジェクトラブライブ！蓮ノ空女学院スクールアイドルクラブ / ©プロジェクトラブライブ！スクールアイドルミュージカル / ©プロジェクトイキヅライブ！</p>
+  </div>
+</footer>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.33.0/mapbox-gl.js"></script>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="access.js"></script>
+<script src="route.js"></script>
+</body>
+</html>
